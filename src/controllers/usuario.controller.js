@@ -15,3 +15,59 @@ export const createUser = async(req, res) => {
         console.error(error)
     }
 }
+
+export const getAllUsers = async(req, res) => {
+    try {
+        const users = await Usuario.findAll();
+
+        res.status(200).json({
+            message: 'Usuarios encontrados con éxito',
+            status: 200,
+            data: users
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const getAllActiveUsers = async(req, res) => {
+    try {
+        const users = await Usuario.findAll({
+            where: { active: true }
+        });
+
+        res.status(200).json({
+          message: "Usuarios encontrados con éxito",
+          status: 200,
+          data: users,
+        });
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const getUsersByFilters = async(req, res) => {
+    try {
+        const filters = req.query; //Esto devuelve un objeto con los filtros
+        const whereCluase = {};
+
+        for (const key in filters) {
+            if (filters.hasOwnProperty(key)) {
+                whereCluase[key] = filters[key]
+            }
+        }
+
+        const users = await Usuario.findAll({
+            where: { ...whereCluase, active: true }
+            
+        })
+
+        res.status(200).json({
+          message: "Usuarios encontrados con éxito",
+          status: 200,
+          data: users,
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
