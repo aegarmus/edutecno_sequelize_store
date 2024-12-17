@@ -8,3 +8,4 @@ export const dbConfig = new Sequelize(process.env.DB_NAME, process.env.DB_USER, 
     port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT
 })
+
