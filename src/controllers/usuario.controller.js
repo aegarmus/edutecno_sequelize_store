@@ -1,5 +1,6 @@
 import { ValidationError } from "../errors/TypeError.js";
 import { Usuario }  from "../models/Usuario.model.js"
+import { validateExistData } from "../utils/validations/Validate.js";
 
 
 export const createUser = async(req, res, next) => {
@@ -112,12 +113,7 @@ export const updateUser = async(req, res, next) => {
         const { id } = req.params;
         const updateData = req.body;
 
-        if(updateData.email) {
-            const existUser = await Usuario.findOne({ where: { email: updateData.email }})
-            if(existUser && existUser.id !== id) {
-                throw new ValidationError("El correo electrónico ya esta en uso por otro usuario")
-            }
-        }
+        await validateExistData(Usuario, updateData, 'email');
 
         const [ updateRows, [ updateUser ] ] = await Usuario.update(updateData, {
             where: { id, active: true },
