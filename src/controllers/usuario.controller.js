@@ -5,6 +5,10 @@ import { validateExistData } from "../utils/validations/Validate.js";
 
 export const createUser = async(req, res, next) => {
     try {
+
+        await validateExistData(Usuario, req.body, 'email');
+        await validateExistData(Usuario, req.body, 'telefono');
+
         const user = await Usuario.create(req.body);
         
         console.log(user)
@@ -113,7 +117,12 @@ export const updateUser = async(req, res, next) => {
         const { id } = req.params;
         const updateData = req.body;
 
-        await validateExistData(Usuario, updateData, 'email');
+        await validateExistData(
+          Usuario,
+          updateData,
+          "email",
+          id
+        );
 
         const [ updateRows, [ updateUser ] ] = await Usuario.update(updateData, {
             where: { id, active: true },
