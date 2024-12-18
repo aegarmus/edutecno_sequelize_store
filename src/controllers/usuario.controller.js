@@ -1,7 +1,8 @@
+import { ValidationError } from "../errors/TypeError.js";
 import { Usuario }  from "../models/Usuario.model.js"
 
 
-export const createUser = async(req, res) => {
+export const createUser = async(req, res, next) => {
     try {
         const user = await Usuario.create(req.body);
         
@@ -12,11 +13,11 @@ export const createUser = async(req, res) => {
             data: user
         })
     } catch (error) {
-        console.error(error)
+        next(error)
     }
 }
 
-export const getAllUsers = async(req, res) => {
+export const getAllUsers = async(req, res, next) => {
     try {
         const users = await Usuario.findAll();
 
@@ -26,11 +27,11 @@ export const getAllUsers = async(req, res) => {
             data: users
         })
     } catch (error) {
-        console.error(error)
+        next(error)
     }
 }
 
-export const getAllActiveUsers = async(req, res) => {
+export const getAllActiveUsers = async(req, res, next) => {
     try {
         const users = await Usuario.findAll({
             where: { active: true }
@@ -42,11 +43,11 @@ export const getAllActiveUsers = async(req, res) => {
           data: users,
         });
     } catch (error) {
-        console.error(error)
+        next(error)
     }
 }
 
-export const getUsersByFilters = async(req, res) => {
+export const getUsersByFilters = async(req, res, next) => {
     try {
         const filters = req.query; //Esto devuelve un objeto con los filtros
         const whereCluase = {};
@@ -68,7 +69,7 @@ export const getUsersByFilters = async(req, res) => {
           data: users,
         });
     } catch (error) {
-        console.error(error);
+        next(error);
     }
 }
 
@@ -84,11 +85,11 @@ export const getUserById = async( req, res ) => {
           data: user,
         });
     } catch (error) {
-        console.error(error);
+        next(error);
     }
 }
 
-export const getActiveUserById = async(req, res) => {
+export const getActiveUserById = async(req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -102,14 +103,21 @@ export const getActiveUserById = async(req, res) => {
           data: user,
         });
     } catch (error) {
-        console.error(error);
+        next(error);
     }
 }
 
-export const updateUser = async(req, res) => {
+export const updateUser = async(req, res, next) => {
     try {
         const { id } = req.params;
         const updateData = req.body;
+
+        if(updateData.email) {
+            const existUser = await Usuario.findOne({ where: { email: updateData.email }})
+            if(existUser && existUser.id !== id) {
+                throw new ValidationError("El correo electrónico ya esta en uso por otro usuario")
+            }
+        }
 
         const [ updateRows, [ updateUser ] ] = await Usuario.update(updateData, {
             where: { id, active: true },
@@ -117,7 +125,7 @@ export const updateUser = async(req, res) => {
         });
 
         if(updateRows === 0) {
-            console.error(`No se encontro al usuario con el ID: ${id}`)
+            throw new ValidationError(`No se encontro al usuario con el ID: ${id}`)
         }
 
         res.status(200).json({
@@ -126,6 +134,6 @@ export const updateUser = async(req, res) => {
             data: updateUser
         })
     } catch (error) {
-        console.error(error);
+        next(error)
     }
 }
