@@ -8,7 +8,7 @@ export const dbConnect = async() => {
         
         await dbConfig.authenticate();
         initUsuario(dbConfig)
-        await dbConfig.sync()
+        await dbConfig.sync({ alter: true })
 
         console.log('Logramos conectarnos a Postgre a traves de Sequelize 😱')
     } catch (error) {

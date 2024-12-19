@@ -35,16 +35,15 @@ export const getAllUsers = async(req, res, next) => {
     }
 }
 
+
 export const getAllActiveUsers = async(req, res, next) => {
     try {
-        const users = await Usuario.findAll({
-            where: { active: true }
-        });
-
+        const users = await Usuario.findAll();
+        
         res.status(200).json({
-          message: "Usuarios encontrados con éxito",
-          status: 200,
-          data: users,
+            message: "Usuarios encontrados con éxito",
+            status: 200,
+            data: users,
         });
     } catch (error) {
         next(error)
@@ -55,50 +54,51 @@ export const getUsersByFilters = async(req, res, next) => {
     try {
         const filters = req.query; //Esto devuelve un objeto con los filtros
         const whereCluase = {};
-
+        
         for (const key in filters) {
             if (filters.hasOwnProperty(key)) {
                 whereCluase[key] = filters[key]
             }
         }
-
+        
         const users = await Usuario.findAll({
-            where: { ...whereCluase, active: true }
-
+            where: { ...whereCluase,  }
+            
         })
-
+        
         res.status(200).json({
-          message: "Usuarios encontrados con éxito",
-          status: 200,
-          data: users,
+            message: "Usuarios encontrados con éxito",
+            status: 200,
+            data: users,
         });
     } catch (error) {
         next(error);
     }
 }
 
-export const getUserById = async( req, res ) => {
+export const getUserByIdIncludeDeleted = async(req, res, next) => {
     try {
-        const { id } = req.params;
+      const { id } = req.params;
 
-        const user = await Usuario.findByPk(id)
+      const user = await Usuario.findByPk(id, { paranoid: false });
 
-        res.status(200).json({
-          message: "Usuario encontrado con éxito",
-          status: 200,
-          data: user,
-        });
+      res.status(200).json({
+        message: "Usuario encontrado con éxito",
+        status: 200,
+        data: user,
+      });
     } catch (error) {
-        next(error);
+      next(error);
     }
 }
+
 
 export const getActiveUserById = async(req, res, next) => {
     try {
         const { id } = req.params;
 
         const user = await Usuario.findOne({
-            where: { id, active: true}
+            where: { id }
         })
 
         res.status(200).json({
@@ -124,7 +124,7 @@ export const updateUser = async(req, res, next) => {
         );
 
         const [ updateRows, [ updateUser ] ] = await Usuario.update(updateData, {
-            where: { id, active: true },
+            where: { id  },
             returning: true
         });
 
@@ -176,6 +176,8 @@ export const restoreUser =  async(req, res, next) => {
         if(!usuario) throw new NotFoundError('Usuario no encontrado para restaurar');
         if(usuario.deletedAt === null) throw new ValidationError('El usuario no ha sido eliminado');
 
+        usuario.active = 'true',
+        usuario.save();
         await usuario.restore();
 
         res.status(200).json({

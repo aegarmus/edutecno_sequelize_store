@@ -75,16 +75,13 @@ export const initUsuario = (dbConfig) => {
             },
           },
         },
-        active: {
-          type: DataTypes.BOOLEAN,
-          defaultValue: true,
-        },
       },
       {
         sequelize: dbConfig,
         modelName: "Usuario",
         tableName: "usuarios",
         timestamps: true,
+        paranoid: true
       }
     );
 
