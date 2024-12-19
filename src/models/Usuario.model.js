@@ -1,5 +1,4 @@
 import { Model, DataTypes } from 'sequelize'
-/* import { dbConfig } from '../config/db.config.js' */
 
 
 export class Usuario extends Model{}
