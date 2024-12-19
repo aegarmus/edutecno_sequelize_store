@@ -1,5 +1,5 @@
 import { Op } from "sequelize"
-import { ValidationError } from "../../errors/TypeError.js"
+import { NotFoundError, ValidationError } from "../../errors/TypeError.js"
 
 
 export const isArrayValidate = (data) => {
@@ -8,6 +8,20 @@ export const isArrayValidate = (data) => {
         "La data ingresada no es un arreglo"
       );
 }
+
+
+export const isEmptyData = (data) => {
+    if(!data || data.length === 0) {
+        throw new ValidationError("la data ingresada esta vacía")
+    }  
+}
+
+export const isEmptyResponseData = (data) => {
+    if (!data || data.length === 0) {
+      throw new NotFoundError("la data solicitada no fue encontrada");
+    }  
+}
+
 /**
  * Valida que el regsitro que se esta evaluando no exista previamente para un campo dado que se espera que sea único. En caso de existir un valor dúplicado en un campo único, arrojara un error de validación
  * @param {Model} Modelo - Modelo constructor de los datos que se comúnica con la DB

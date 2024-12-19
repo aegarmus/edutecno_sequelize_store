@@ -81,7 +81,7 @@ export const initUsuario = (dbConfig) => {
         modelName: "Usuario",
         tableName: "usuarios",
         timestamps: true,
-        paranoid: true
+        paranoid: true //Habilito el soft Delete al usar Destroy - Pero, agrega un campo nuevo llamado deletedAt
       }
     );
 
