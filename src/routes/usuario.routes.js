@@ -4,16 +4,16 @@ import { createUser, deletUser, getActiveUserById, getAllActiveUsers, getAllUser
 
 const router = Router()
 
-router.post('/usuario', createUser);
-router.get('/usuario', getAllActiveUsers);
-router.get('/usuario/filter', getUsersByFilters);
-router.get('/usuario/:id', getActiveUserById);
-router.put('/usuario/:id', updateUser)
-router.delete('/usuario/:id', deletUser);
-router.patch('/usuario/:id', restoreUser)
+router.post('/', createUser);
+router.get('/', getAllActiveUsers);
+router.get('/filter', getUsersByFilters);
+router.get('/:id', getActiveUserById);
+router.put('/:id', updateUser)
+router.delete('/:id', deletUser);
+router.patch('/:id', restoreUser)
 
-router.get('/admin/usuario', getAllUsersIncludeDeleted);
-router.get('/admin/usuario/:id', getUserByIdIncludeDeleted)
-router.delete('/admin/usuario/:id', physicDeletUser)
+router.get('/admin/', getAllUsersIncludeDeleted);
+router.get('/admin/:id', getUserByIdIncludeDeleted)
+router.delete('/admin/:id', physicDeletUser)
 
 export default router;
