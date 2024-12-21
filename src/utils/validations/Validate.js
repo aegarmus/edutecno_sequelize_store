@@ -9,11 +9,30 @@ export const isArrayValidate = (data) => {
       );
 }
 
-export const notFoundDataRequest = async(Model, pk) => {
-    const data = await Model.findByPk(pk);
+
+/**
+ * Válida que exista un registro dentro de una Modelo especfico a traves de su Primary Key
+ * @param {Model} Model - Modelo constructor de los datos que se comúnica con la DB
+ * @param {string} pk - Primary Key para ejecutar la busqueda en la tabla
+ * @param {boolean} transaction - Valor booleano que indica si la función es llamada dentro de una transacción 
+ * @param {Promise<object>} transactionConfig - Variable que contiene el inicio de la transacción de Sequelize
+ * @throws {NotFoundError} - Error de no encontrado si no encontramos la data a traves del primary key dentro del modelo 
+ * @returns {Promise<object>} - Returna la data del modelo consultado
+ */
+export const notFoundDataRequestByPk = async(Model, pk, transaction = false, transactionConfig) => {
+    let data = null
+    
+    if(transaction) {
+        data = await Model.findByPk(pk, { transaction: transactionConfig });
+    } else {
+        data = await Model.findByPk(pk);
+    }
+
     if(!data) throw new NotFoundError(
       `datos con la primary key ${pk} no encontrados en la tabla ${Model.tableName}`
     );
+
+    return data
 }
 
 export const isEmptyData = (data, field) => {
