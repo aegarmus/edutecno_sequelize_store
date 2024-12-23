@@ -102,3 +102,72 @@ export const createVentaConProducto = async(req, res, next) => {
         next(error)
     }
 }
+
+
+export const getAllSalesWithDetails = async(req, res, next) => {
+    try {
+        const sales = await Venta.findAll({
+            include: [
+                {
+                    model: Usuario,
+                    as: 'usuario',
+                    attributes: ['id', 'nombre', 'apellido_paterno', 'email']
+                },
+                {
+                    model: Producto,
+                    as: 'productos',
+                    //Este throught busca automaticamente a la tabla intermedia declarada en las asociaciones
+                    through: {
+                        attributes: ['cantidad', 'subtotal']
+                    },
+                    attributes: ['id', 'nombre', 'precio']
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        })
+
+        res.status(200).json({
+            message: 'Ventas obtenidas con éxito',
+            status: 200,
+            data: sales
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const getSaleByUserId = async(req, res, next) => {
+    try {
+        const { usuarioId } = req.params;
+
+        const sales = await Venta.findAll({
+            where: { usuarioId },
+            include: [
+                {
+                    model: Usuario,
+                    as: 'usuario',
+                    attributes: ['id', 'nombre', 'email', 'telefono']
+                },
+                 {
+                    model: Producto,
+                    as: 'productos',
+                    //Este throught busca automaticamente a la tabla intermedia declarada en las asociaciones
+                    through: {
+                        attributes: ['cantidad', 'subtotal']
+                    },
+                    attributes: ['id', 'nombre', 'precio']
+                }
+            ],
+            attributes: { exclude: ['usuarioId', 'updatedAt']},
+        })
+
+        res.status(200).json({
+            message: 'Ventas obtenidas con éxito',
+            status: 200,
+            data: sales
+        })
+    } catch (error) {
+        next(error)
+    }
+}
