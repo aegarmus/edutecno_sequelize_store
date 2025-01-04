@@ -3,7 +3,6 @@ import { Producto } from "../models/Producto.model.js"
 import { isEmptyResponseData } from "../utils/validations/Validate.js";
 
 
-
 export const createProduct = async(req, res, next) => {
     try {
         const product = await Producto.create(req.body)
