@@ -5,6 +5,7 @@ import path from 'path'
 import { serverInit } from './services/serverInit.js';
 
 import router from './routes/routes.js'
+import viewsRouter from './routes/views.routes.js'
 import { errorHandler } from './middlewares/errorHandlers.js';
 
 const app = express()
@@ -17,8 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.engine('.hbs', engine({
     extname: '.hbs',
-    layoutsDir: path.join(process.cwd(), 'src', 'views', 'layouts'),
     defaultLayout: 'main',
+    layoutsDir: path.join(process.cwd(), 'src', 'views', 'layouts'),
     partialsDir: path.join(process.cwd(), 'src', 'views', 'partials')
 }));
 
@@ -29,14 +30,10 @@ app.set('view engine', '.hbs');
 //CWD => Current Working Directory
 
 app.use('/api/v1', router)
+app.use('', viewsRouter)
 
 app.use(errorHandler);
 
-
-app.get('/', (req, res) => {
-    res.render('pages/home')
-})
-
-
+    
 serverInit(app, PORT)
 console.log(process.cwd())
