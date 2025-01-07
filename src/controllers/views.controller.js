@@ -25,3 +25,11 @@ export const renderListProduct = async(req, res, next) => {
         next(error)
     }
 }
+
+export const renderRegisterForm = (req, res) => {
+    res.render('usuarios/register');
+}
+
+export const renderRegisterSuccess = (req, res) => {
+    res.render('usuarios/successRegister')
+}

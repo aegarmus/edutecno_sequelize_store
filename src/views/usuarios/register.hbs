@@ -1,0 +1,30 @@
+
+
+<section>
+    <h2>Registrate</h2>
+
+    <form action="/api/v1/usuario" method="POST">
+        <div>
+            <label>Nombre</label>
+            <input type="text" name="nombre" required>
+        </div>
+        <div>
+            <label>Apellido Paterno</label>
+            <input type="text" name="apellido_paterno" required>
+        </div>
+        <div>
+            <label>Apellido Materno</label>
+            <input type="text" name="apellido_materno" required>
+        </div>
+        <div>
+            <label>email</label>
+            <input type="email" name="email" required>
+        </div>
+        <div>
+            <label>telefono</label>
+            <input type="text" name="telefono" required>
+        </div>
+
+        <button type="submit">Registrar</button>
+    </form>
+</section>
