@@ -20,7 +20,11 @@ app.engine('.hbs', engine({
     extname: '.hbs',
     defaultLayout: 'main',
     layoutsDir: path.join(process.cwd(), 'src', 'views', 'layouts'),
-    partialsDir: path.join(process.cwd(), 'src', 'views', 'partials')
+    partialsDir: path.join(process.cwd(), 'src', 'views', 'partials'),
+    /* runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true
+    } */
 }));
 
 
