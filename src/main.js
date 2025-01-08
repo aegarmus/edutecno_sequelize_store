@@ -1,6 +1,7 @@
 import express from 'express';
 import { engine } from 'express-handlebars';
-import path from 'path'
+import path from 'path';
+import  cors from 'cors'
 
 import { serverInit } from './services/serverInit.js';
 
@@ -12,6 +13,8 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 app.use(express.static(path.join(process.cwd(), 'public')))
+
+app.use(cors())
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

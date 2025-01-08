@@ -47,7 +47,7 @@ export const getProductById = async (req, res, next) => {
         }
     });
 
-    isEmptyResponseData(products);
+    isEmptyResponseData(product);
 
     res.status(200).json({
       message: "Producto encontrado con éxito",
